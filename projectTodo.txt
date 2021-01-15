@@ -1,0 +1,2 @@
+- Explore using scripts to get JS to HTML. Cleaner than EJS?
+- Set up GitHub connection to LS account and make a commit

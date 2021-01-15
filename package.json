@@ -1,0 +1,17 @@
+{
+  "name": "directorymanager",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Web Service API and SPA",
+  "main": "index.js",
+  "scripts": {
+    "start": "node Server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "glob": "^7.1.6"
+  }
+}
