@@ -1,40 +1,38 @@
 var express = require("express");
-var path = require("path");
-var glob = require("glob");
-
-//Set application variables
-var title = "Single Page Application";
-var homeDirectory = "directory";
 
 //Use the application off of express and set port
 var app = express();
 app.use(express.static(__dirname));
 var port = 3000;
 
-//Set up view engine
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
-//Render HTMl files
-app.engine("html", require("ejs").renderFile);
-
+//GLOB
+var glob = require("glob");
+//Set directory
+var homeDirectory = "directory";
 //Get list of files and folders in test directory
-
-var filesAndFolders = glob.sync(homeDirectory + "/**/*");
-
-console.log("the files:");
-console.log(filesAndFolders);
+var content = glob.sync(homeDirectory + "/**/*");
+console.log(content);
 
 //Define the route for "/"
 app.get("/", function (request, response) {
   //Show this file when the "/" is requested
-  response.render("Index.html", {
-    title: title,
-    contents: filesAndFolders,
-  });
+  response.render("Index.html", { sentData: "attempt" });
+});
+
+app.get("/scripts", function (request, response) {
+  //Show this file when the "/" is requested
+  response.sentData;
 });
 
 //Start the server
-app.listen(port, () => {
-  console.log(title + " listening on port " + port);
+var http = require("http").createServer(app);
+http.listen(port, () => {
+  console.log("application listening on port " + port);
+});
+
+//socket.io setup to send content from server to client
+var io = require("socket.io")(http);
+io.on("connection", (client) => {
+  console.log("connected");
+  client.emit("sendContent", content);
 });

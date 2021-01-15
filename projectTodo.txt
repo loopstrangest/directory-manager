@@ -1,2 +1,6 @@
-- Explore using scripts to get JS to HTML. Cleaner than EJS?
-- Set up GitHub connection to LS account and make a commit
+Todo:
+
+
+01.15.21
+- Set up GitHub connection to LS account and made a commit
+- Remove EJS and use socket.io + scripts to get JS to HTML. Cleaner!
