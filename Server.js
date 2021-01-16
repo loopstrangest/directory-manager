@@ -13,15 +13,18 @@ var homeDirectory = "directory";
 var content = glob.sync(homeDirectory + "/**/*");
 console.log(content);
 
-//Define the route for "/"
-app.get("/", function (request, response) {
-  //Show this file when the "/" is requested
-  response.render("Index.html", { sentData: "attempt" });
+app.get("/", function (req, res) {
+  //Show Index.html when the "/" is requested
+  res.sendFile("Index.html");
 });
 
-app.get("/scripts", function (request, response) {
+app.get("/\\?search=:searchterm", function (req, res) {
+  res.sendFile("Index.html");
+});
+
+app.get("/scripts", function (req, res) {
   //Show this file when the "/" is requested
-  response.sentData;
+  res.sentData;
 });
 
 //Start the server
