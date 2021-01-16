@@ -1,3 +1,9 @@
+//Assign names to content list elements
+var searchBar = document.getElementById("searchBar");
+var contentList = document.getElementById("contentList");
+
+var allDirectoryItems = [];
+
 //Initialize socket
 var socket = io({
   //withCredentials: true,
@@ -7,20 +13,39 @@ var socket = io({
 });
 
 //Receive content list from server
-socket.on("sendContent", updateDisplay);
+socket.on("sendContent", getAllDirectoryItems);
+socket.on("sendContent", updateList);
 
-function updateDisplay(contentList) {
-  formattedList = formatContentList(contentList);
-
-  contentList = document.getElementById("contentList");
-  contentList.innerHTML = formattedList;
-  contentList.style.color = "red";
+//Save complete, unfiltered directory to access as needed
+function getAllDirectoryItems(content) {
+  allDirectoryItems = content;
 }
 
-function formatContentList(list) {
-  formattedList = [];
-  list.forEach((entry) => {
+//Display initial content list
+function updateList(content) {
+  var formattedList = formatContent(filterContent(content));
+  contentList.innerHTML = formattedList;
+}
+
+function formatContent(content) {
+  var formattedList = [];
+  content.forEach((entry) => {
     formattedList.push("<a href=" + entry + ">" + entry + "</a>");
   });
   return formattedList.join("");
+}
+
+searchBar.oninput = function () {
+  updateList(allDirectoryItems);
+};
+
+function filterContent(content) {
+  if (searchBar.value == "") {
+    return content;
+  } else {
+    var filteredList = content.filter(
+      (entry) => entry.search(searchBar.value) != -1
+    );
+    return filteredList;
+  }
 }

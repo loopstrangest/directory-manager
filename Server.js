@@ -3,7 +3,7 @@ var express = require("express");
 //Use the application off of express and set port
 var app = express();
 app.use(express.static(__dirname));
-var port = 3000;
+var port = process.env.port || 3000;
 
 //GLOB
 var glob = require("glob");
