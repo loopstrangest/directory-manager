@@ -8,9 +8,16 @@
   line-height: 0rem;
 }
 
+.contentEntry {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
 a,
 p {
-  display: block;
+  margin-top: auto;
+  margin-bottom: auto;
   font-size: 24px;
   color: black;
 }

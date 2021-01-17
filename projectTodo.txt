@@ -1,5 +1,5 @@
 Todo:
-- Show file and folder counts and sizes for the current view
+
 
 01.15.21
 - Set up GitHub connection to LS account and made a commit
@@ -9,3 +9,4 @@ Todo:
 01.16.21
 - Instantly update displayed directory contents based on search value
 - Added search param to URL to reflect UI search state
+- Show file and folder counts and sizes for the current view
