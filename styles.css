@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .search {
   display: flex;
   height: 3rem;
@@ -8,10 +14,26 @@
   line-height: 0rem;
 }
 
-.contentEntry {
+.downloadButtonContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.contentEntry,
+#contentHeader {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+#contentHeader > *,
+.contentEntry > * {
+  width: 33%;
+}
+
+.notApplicable {
+  display: flex;
+  justify-content: center;
 }
 
 a,

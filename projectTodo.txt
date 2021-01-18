@@ -1,5 +1,5 @@
 Todo:
-
+- Add inputs to download files
 
 01.15.21
 - Set up GitHub connection to LS account and made a commit

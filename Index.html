@@ -11,12 +11,24 @@
         <p>Search:&nbsp;</p>
         <input type="text" id='searchBar'>
     </div>
+    <div id='contentHeader'>
+        <p><strong>Item</strong></p>
+        <p><strong>Size</strong></p>
+        <div class = 'downloadButtonContainer'>
+            <button id='toggleDownloadsButton'
+            onclick='checkDownloads()'>Toggle All Downloads</button>
+            <button id='downloadButton'
+            onclick='downloadItems()'>Download Selected</button>
+            
+        </div>
+    </div>
     <div id='contentList'>
     </div>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js'></script>
+    <!--lower scripts can use functions from upper scripts-->
+    <script type='text/javascript' src="/scripts/handleURL.js"></script> 
+    <script type='text/javascript' src="/scripts/handleDownloads.js"></script>    
     <script type='text/javascript' src="/scripts/handleContentList.js"></script>
-    
-
     
 </body>
 </html>
