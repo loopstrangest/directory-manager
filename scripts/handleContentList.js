@@ -83,18 +83,21 @@ function formatContent(content) {
   var formattedList = [];
   //Create a link element for each item
   content.forEach((entry) => {
+    infoElement = "<p class='sizeInfo'>" + entry[1] + "</p>";
     //Wrap each entry's elements in a div
     formattedList.push("<div class='contentEntry'>");
     if (entry[1].search("item") != -1) {
       //data with 'item' is a folder: <p> is appropriate element
-      formattedList.push("<p>" + entry[0] + "</p>");
-      formattedList.push("<p>" + entry[1] + "</p>");
+      formattedList.push("<p class='item'>" + entry[0] + "</p>");
+      formattedList.push(infoElement);
       formattedList.push("<p class='notApplicable'>n/a</p>");
     }
     //data without 'item' is a file: <a> is appropriate element
     else {
-      formattedList.push("<a href=" + entry[0] + ">" + entry[0] + "</a>");
-      formattedList.push("<p>" + entry[1] + "</p>");
+      formattedList.push(
+        "<a class='item' href=" + entry[0] + ">" + entry[0] + "</a>"
+      );
+      formattedList.push(infoElement);
       formattedList.push("<input type='checkbox' class='downloadBox'>");
     }
 
@@ -103,7 +106,7 @@ function formatContent(content) {
 
   //Display 'no results' message when appropriate
   if (formattedList.length == 0) {
-    return "<p>No results</p>";
+    return "<p><i>No results</i></p>";
   } else {
     return formattedList.join("");
   }

@@ -1,21 +1,30 @@
 var express = require("express");
 var fs = require("fs");
+var multer = require("multer");
+var glob = require("glob");
+
+//Set directory-in-focus
+var activeDirectory = "directory";
+
+//Create file storage object
+var storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, activeDirectory);
+  },
+  filename: (req, file, callback) => {
+    const { originalname } = file;
+    callback(null, originalname);
+  },
+});
+var upload = multer({ storage });
 
 //Use the application off of express and set port
 var app = express();
 app.use(express.static(__dirname));
 var port = process.env.port || 3000;
 
-//GLOB
-var glob = require("glob");
-//Set directory
-var homeDirectory = "directory";
-//Get list of files and folders in test directory
-var content = glob.sync(homeDirectory + "/**/*");
-//console.log(content);
-
 //Get folder counts and file sizes
-function getItemDetails() {
+function getItemDetails(content) {
   var itemDetails = [];
   for (var i = 0; i < content.length; i++) {
     var entry = content[i];
@@ -43,13 +52,11 @@ app.get("/", function (req, res) {
   res.sendFile("Index.html");
 });
 
-app.get("/\\?search=:searchterm", function (req, res) {
-  res.sendFile("Index.html");
-});
-
-app.get("/scripts", function (req, res) {
-  //Show this file when the "/" is requested
-  res.sentData;
+//Handle file upload
+app.post("/upload", upload.array("selectedFiles"), (req, res) => {
+  //Refresh page to reflect up-to-date file list
+  res.redirect("back");
+  //return res.json({ status: "ok", uploaded: req.files.length });
 });
 
 //Start the server
@@ -62,5 +69,8 @@ http.listen(port, () => {
 var io = require("socket.io")(http);
 io.on("connection", (client) => {
   console.log("connected");
-  client.emit("sendContent", content, getItemDetails());
+  //Get list of files and folders in active directory
+  var content = glob.sync(activeDirectory + "/**/*");
+  //console.log(content);
+  client.emit("sendContent", content, getItemDetails(content));
 });

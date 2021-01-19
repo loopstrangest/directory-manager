@@ -1,5 +1,5 @@
 Todo:
-- Add inputs to download files
+
 
 01.15.21
 - Set up GitHub connection to LS account and made a commit
@@ -10,3 +10,9 @@ Todo:
 - Instantly update displayed directory contents based on search value
 - Added search param to URL to reflect UI search state
 - Show file and folder counts and sizes for the current view
+
+01.18.21
+- Added file download checkboxes and 'download' URL param
+
+01.19.21
+- Created file upload form that auto-refreshes the UI

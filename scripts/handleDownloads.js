@@ -14,7 +14,6 @@ function getDownloadElements() {
 function getDownloadsFromURL() {
   var searchParams = new URLSearchParams(document.location.search);
   var downloads = searchParams.get("download");
-  console.log(downloads);
   //Update downloads if any are listed in URL
   if (downloads != null) {
     //Get usable download index list from search param
