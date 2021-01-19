@@ -15,7 +15,7 @@ function getDownloadsFromURL() {
   var searchParams = new URLSearchParams(document.location.search);
   var downloads = searchParams.get("download");
   //Update downloads if any are listed in URL
-  if (downloads != null) {
+  if (downloads) {
     //Get usable download index list from search param
     downloads.split(",").forEach((index) => {
       downloadCheckboxes[index].checked = true;
@@ -31,6 +31,14 @@ function updateDownloadParam(downloadIndices) {
   } else {
     searchParams.set("download", downloadIndices.toString());
   }
+  updateURLToReflectUI(searchParams);
+}
+
+//Clear the download param when the user changes the home directory
+function clearDownloadParam() {
+  var searchParams = new URLSearchParams(document.location.search);
+  console.log("cleared");
+  searchParams.delete("download");
   updateURLToReflectUI(searchParams);
 }
 

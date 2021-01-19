@@ -1,45 +1,54 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <link rel='stylesheet' href='/styles.css'/>
+    <link rel="stylesheet" href="/styles.css"/>
     <title>Directory Manager</title>
 </head>
 <body>
     <h1>Directory Manager</h1>
-    <!--Options: search and upload files-->
+    <!--Options: search/upload files and change home directory-->
     <div class="options">
         <div class="search">
             <p>Search:&nbsp;</p>
-            <input type="text" id='searchBar'>
+            <input type="text" id="searchBar">
         </div>
         <div class="uploadFiles">
             <p>Upload Files:&nbsp;</p>
-            <form action="/upload" method="POST" enctype='multipart/form-data'>
-                <input type="file" name='selectedFiles' id='fileUploader' multiple>
-                <button>Submit Files</button>
+            <form action="upload" method="POST" enctype="multipart/form-data">
+                <input type="file" name="selectedFiles" id="fileUploader" onchange = this.form.submit() multiple>
             </form>
-            
-        </div>        
+        </div>
+        <div class="setHome">
+            <p>Home:&nbsp;</p>
+            <form action="getHome" method="POST">
+                <select class ="home" name="home" id='selectHome'>
+                    <option value="directory">directory</option>
+                    <option value="admin">admin</option>
+                </select>
+            </form>
+        </div>   
     </div>
     <!--File/folder column headers and download toggle-->
-    <div id='contentHeader'>
-        <p class='itemHeader'><strong>Item</strong></p>
-        <p class='sizeHeader'><strong>Size</strong></p>
-        <div class = 'downloadButtonContainer'>
-            <button id='toggleDownloadsButton'
-            onclick='checkDownloads()'>Toggle All Downloads</button>
-            <button id='downloadButton'
-            onclick='downloadItems()'>Download Selected</button>
+    <div id="contentHeader">
+        <p class="itemHeader"><strong>Item</strong></p>
+        <p class="sizeHeader"><strong>Size</strong></p>
+        <div class = "downloadButtonContainer">
+            <button id="toggleDownloadsButton"
+            onclick="checkDownloads()">Toggle All Downloads</button>
+            <button id="downloadButton"
+            onclick="downloadItems()">Download Selected</button>
         </div>
     </div>
     <!--List of files and folders is generated from /scripts/handleContentList.js-->
-    <div id='contentList'>
+    <div id="contentList">
     </div>
     <!--Scripts: lower scripts can use functions from upper scripts-->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js'></script>
-    <script type='text/javascript' src="/scripts/handleURL.js"></script> 
-    <script type='text/javascript' src="/scripts/handleDownloads.js"></script>    
-    <script type='text/javascript' src="/scripts/handleContentList.js"></script>
-    <script type='text/javascript' src="/scripts/handleUploads.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="/scripts/handleURL.js"></script> 
+    <script type="text/javascript" src="/scripts/handleDownloads.js"></script>
+    <script type="text/javascript" src="/scripts/handleHome.js"></script>
+    <script type="text/javascript" src="/scripts/handleContentList.js"></script>
+    <script type="text/javascript" src="/scripts/handleUploads.js"></script>
+    
 </body>
 </html>

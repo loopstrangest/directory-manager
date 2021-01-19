@@ -21,12 +21,13 @@ function receiveContent(itemContent, itemDetails) {
   combinedItemList = itemContent.map((item, i) => {
     return [item, itemDetails[i]];
   });
-  //Set initial current list to match full list
+  //Set current list to match full list
   currentItemList = combinedItemList;
-  //Update the displayed list on page load
+  //Update displayed list and UI from URL params on page load
   getSearchTermFromURL();
   updateList(combinedItemList);
   getDownloadsFromURL();
+  getHomeFromURL();
 }
 
 //On page load, check for search term from URL and update UI
@@ -34,7 +35,7 @@ function getSearchTermFromURL() {
   var searchParams = new URLSearchParams(document.location.search);
   var searchTerm = searchParams.get("search");
   //Update search bar if URL contains a search term
-  if (searchTerm != null) {
+  if (searchTerm) {
     searchBar.value = searchTerm;
   }
 }

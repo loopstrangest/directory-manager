@@ -16,3 +16,4 @@ Todo:
 
 01.19.21
 - Created file upload form that auto-refreshes the UI
+- Added selector to configure the home directory 

@@ -23,10 +23,15 @@ button,
 }
 
 .search {
-  width: 33.33%;
+  width: 25%;
 }
+
+.setDirectory {
+  width: 25%;
+}
+
 .uploadFiles {
-  width: 66.67%;
+  width: 50%;
 }
 
 .options > * {
@@ -42,7 +47,8 @@ form {
 }
 
 .search > *,
-.uploadFiles > * {
+.uploadFiles > *,
+.setDirectory > * {
   line-height: 0rem;
 }
 
@@ -55,6 +61,12 @@ form {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.contentEntry > *,
+#contentHeader > * {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .itemHeader,

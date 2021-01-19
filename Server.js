@@ -2,8 +2,10 @@ var express = require("express");
 var fs = require("fs");
 var multer = require("multer");
 var glob = require("glob");
+var bodyParser = require("body-parser");
+var url = require("url");
 
-//Set directory-in-focus
+//Set default directory-in-focus
 var activeDirectory = "directory";
 
 //Create file storage object
@@ -18,9 +20,10 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage });
 
-//Use the application off of express and set port
+//Set express, bodyParser, port
 var app = express();
-app.use(express.static(__dirname));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 var port = process.env.port || 3000;
 
 //Get folder counts and file sizes
@@ -46,17 +49,28 @@ function getItemDetails(content) {
   return itemDetails;
 }
 
-//Express routes
+//Express routes: get
 app.get("/", function (req, res) {
-  //Show Index.html when the "/" is requested
-  res.sendFile("Index.html");
+  //update activeDirectory based on home URL
+  homeParam = req.query.home ? true : false;
+  activeDirectory = homeParam ? req.query.home : "directory";
+  res.sendFile(__dirname + "/Index.html");
 });
 
-//Handle file upload
+//Use other static files: JS scripts
+app.use(express.static(__dirname));
+
+//Handle file upload and home selection
 app.post("/upload", upload.array("selectedFiles"), (req, res) => {
   //Refresh page to reflect up-to-date file list
   res.redirect("back");
   //return res.json({ status: "ok", uploaded: req.files.length });
+});
+
+app.post("/getHome", function (req, res) {
+  //Refresh page to reflect up-to-date home folder
+  activeDirectory = req.body.home;
+  res.redirect("back");
 });
 
 //Start the server
@@ -71,6 +85,5 @@ io.on("connection", (client) => {
   console.log("connected");
   //Get list of files and folders in active directory
   var content = glob.sync(activeDirectory + "/**/*");
-  //console.log(content);
   client.emit("sendContent", content, getItemDetails(content));
 });

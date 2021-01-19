@@ -8,13 +8,14 @@ In the project directory, run:
 
 To install the necessary packages.
 
-In the project directory, you can run:
+In the project directory, run:
 
 ### `npm start`
 
-To run the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+To run the app. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Project Description
 
-The completed version of the project will be a single page application that can be used to search and browse files and folders, as well as upload and download files from the browser.
+This single page application allows the user to search and browse files and folders in a specified directory, as well as upload and download files from the browser.
+
+'Search', 'download', and 'home' parameters automatically update in the URL to reflect the current state of the UI. Likewise, the user can navigate to a URL that includes any of the parameters and the UI will reflect that information.
