@@ -26,12 +26,8 @@ button,
   width: 25%;
 }
 
-.setDirectory {
-  width: 25%;
-}
-
 .uploadFiles {
-  width: 50%;
+  width: 75%;
 }
 
 .options > * {
@@ -47,8 +43,7 @@ form {
 }
 
 .search > *,
-.uploadFiles > *,
-.setDirectory > * {
+.uploadFiles > * {
   line-height: 0rem;
 }
 
@@ -72,6 +67,10 @@ form {
 .itemHeader,
 .item {
   width: 50%;
+}
+
+.item {
+  cursor: pointer;
 }
 
 .sizeHeader,

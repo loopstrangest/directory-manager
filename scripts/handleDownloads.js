@@ -37,7 +37,6 @@ function updateDownloadParam(downloadIndices) {
 //Clear the download param when the user changes the home directory
 function clearDownloadParam() {
   var searchParams = new URLSearchParams(document.location.search);
-  console.log("cleared");
   searchParams.delete("download");
   updateURLToReflectUI(searchParams);
 }

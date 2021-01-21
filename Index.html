@@ -2,6 +2,10 @@
 <html>
 <head>
     <link rel="stylesheet" href="/styles.css"/>
+    <link rel="icon" type="image/png" sizes="32x32"
+    href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+    href="/favicon-16x16.png">
     <title>Directory Manager</title>
 </head>
 <body>
@@ -17,16 +21,7 @@
             <form action="upload" method="POST" enctype="multipart/form-data">
                 <input type="file" name="selectedFiles" id="fileUploader" onchange = this.form.submit() multiple>
             </form>
-        </div>
-        <div class="setHome">
-            <p>Home:&nbsp;</p>
-            <form action="getHome" method="POST">
-                <select class ="home" name="home" id='selectHome'>
-                    <option value="directory">directory</option>
-                    <option value="admin">admin</option>
-                </select>
-            </form>
-        </div>   
+        </div> 
     </div>
     <!--File/folder column headers and download toggle-->
     <div id="contentHeader">
@@ -39,16 +34,25 @@
             onclick="downloadItems()">Download Selected</button>
         </div>
     </div>
+    <div class="postTest">
+        <!--<form action='/dataToServer' method='post'>-->
+        <label>First Name:</label>
+        <input id='firstName' type="text" name='first' value='John'>
+        <label>Last Name:</label>
+        <input id='lastName' type="text" name='last' value='Doe'>
+        <input type="submit" value='Submit' onclick=apiTest()>
+        <!--<</form>-->
+    </div>
     <!--List of files and folders is generated from /scripts/handleContentList.js-->
     <div id="contentList">
     </div>
     <!--Scripts: lower scripts can use functions from upper scripts-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
     <script type="text/javascript" src="/scripts/handleURL.js"></script> 
+    <script type="text/javascript" src="/scripts/handleView.js"></script>
     <script type="text/javascript" src="/scripts/handleDownloads.js"></script>
-    <script type="text/javascript" src="/scripts/handleHome.js"></script>
     <script type="text/javascript" src="/scripts/handleContentList.js"></script>
     <script type="text/javascript" src="/scripts/handleUploads.js"></script>
-    
+    <script type="text/javascript" src="/scripts/handleServerData.js"></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 var express = require("express");
 var fs = require("fs");
 var multer = require("multer");
-var glob = require("glob");
 var bodyParser = require("body-parser");
 var url = require("url");
+const { response } = require("express");
 
 //Set default directory-in-focus
 var activeDirectory = "directory";
@@ -28,62 +28,96 @@ var port = process.env.port || 3000;
 
 //Get folder counts and file sizes
 function getItemDetails(content) {
-  var itemDetails = [];
+  var folderList = [];
+  var fileList = [];
+  var testObj = {};
   for (var i = 0; i < content.length; i++) {
     var entry = content[i];
     var bytes = fs.statSync(entry).size;
+    var isFile = fs.statSync(entry).isFile();
+    var isDirectory = fs.statSync(entry).isDirectory();
     //Item with size == 0 is a folder
-    if (bytes == 0) {
+    if (isDirectory) {
       var dir = "./" + entry;
       var numItems = fs.readdirSync(dir).length;
       var itemText = numItems == 1 ? " item" : " items";
-      itemDetails[i] = numItems + itemText;
+      folderList.push({
+        folderName: entry,
+        itemCount: numItems + itemText,
+      });
     }
     //Item with size > 0 is a file
-    else if (bytes < 1024) {
-      itemDetails[i] = bytes + " B";
-    } else {
-      itemDetails[i] = Math.round(bytes / 1024) + " KB";
+    else if (isFile) {
+      var size;
+      if (bytes < 1024) {
+        size = bytes + " B";
+      } else {
+        size = Math.round(bytes / 1024) + " KB";
+      }
+      fileList.push({
+        fileName: entry,
+        fileSize: size,
+      });
     }
   }
-  return itemDetails;
+  testObj.path = activeDirectory;
+  testObj.folders = folderList;
+  testObj.files = fileList;
+  return testObj;
 }
 
 //Express routes: get
 app.get("/", function (req, res) {
-  //update activeDirectory based on home URL
-  homeParam = req.query.home ? true : false;
-  activeDirectory = homeParam ? req.query.home : "directory";
+  console.log("page");
+  var content = fs.readdirSync(activeDirectory);
+  console.log("content is:");
+  console.log(content);
   res.sendFile(__dirname + "/Index.html");
 });
 
-//Use other static files: JS scripts
-app.use(express.static(__dirname));
+//Test function
+/*
+app.post("/dataTest", (req, res, next) => {
+  res.json({
+    status: "success",
+    first: req.body.firstName,
+    last: req.body.lastName,
+  });
+});
+*/
 
-//Handle file upload and home selection
+//Post requests
+app.post("/changeFolderView", (req, res) => {
+  var directory = req.body.folder;
+  var content = fs.readdirSync(directory);
+  content.forEach((item, index) => {
+    content[index] = directory + "/" + item;
+  });
+  var jsonObj = getItemDetails(content);
+  res.json(jsonObj);
+});
+
+app.post("/getInitialView", (req, res) => {
+  var content = fs.readdirSync(activeDirectory);
+  content.forEach((item, index) => {
+    content[index] = activeDirectory + "/" + item;
+  });
+  var jsonObj = getItemDetails(content);
+  res.json(jsonObj);
+});
+
+//Handle file upload
 app.post("/upload", upload.array("selectedFiles"), (req, res) => {
   //Refresh page to reflect up-to-date file list
   res.redirect("back");
   //return res.json({ status: "ok", uploaded: req.files.length });
 });
 
-app.post("/getHome", function (req, res) {
-  //Refresh page to reflect up-to-date home folder
-  activeDirectory = req.body.home;
-  res.redirect("back");
-});
+//Use other static files: JS scripts
+app.use(express.static(__dirname));
 
 //Start the server
 var http = require("http").createServer(app);
 http.listen(port, () => {
   console.log("application listening on port " + port);
-});
-
-//Have socket.io send data from server to client
-var io = require("socket.io")(http);
-io.on("connection", (client) => {
-  console.log("connected");
-  //Get list of files and folders in active directory
-  var content = glob.sync(activeDirectory + "/**/*");
-  client.emit("sendContent", content, getItemDetails(content));
 });
