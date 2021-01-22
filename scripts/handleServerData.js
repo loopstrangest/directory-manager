@@ -17,10 +17,10 @@ async function changeFolderView(folder, clearDownloads) {
   receiveDirectoryContent(json);
 }
 
-//When the app is initiated, show the default directory items
-async function getInitialView() {
+//When the app is initialized, show the root directory content
+async function getRootView() {
   const options = { method: "POST" };
-  const response = await fetch("/getInitialView", options);
+  const response = await fetch("/getRootView", options);
   const json = await response.json();
   receiveDirectoryContent(json);
 }
@@ -29,7 +29,7 @@ async function getInitialView() {
 if (getViewFromURL()) {
   changeFolderView(getViewFromURL(), false);
 } else {
-  getInitialView();
+  getRootView();
 }
 
 //Test function

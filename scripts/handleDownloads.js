@@ -18,7 +18,11 @@ function getDownloadsFromURL() {
   if (downloads) {
     //Get usable download index list from search param
     downloads.split(",").forEach((index) => {
-      downloadCheckboxes[index].checked = true;
+      try {
+        downloadCheckboxes[index].checked = true;
+      } catch (error) {
+        console.log("Checkbox not found: " + error);
+      }
     });
   }
 }

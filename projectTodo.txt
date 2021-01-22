@@ -1,5 +1,7 @@
 Todo:
-- Set root folder with a server-side variable
+- Add option to move back up the filepath toward the root directory
+
+~~~~~
 
 01.15.21
 - Set up GitHub connection to LS account and made a commit
@@ -21,3 +23,6 @@ Todo:
 01.21.21
 - Have front end interpret JSON
 - Have server take some input from the front end to produce JSON
+
+01.22.21
+- Set root directory with a server-side variable
