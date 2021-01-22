@@ -10,10 +10,17 @@ async function changeFolderView(folder, clearDownloads) {
   };
   const response = await fetch("/changeFolderView", options);
   const json = await response.json();
+  //Clear downloads when specified
   if (clearDownloads) {
     clearDownloadParam();
   }
-  updateViewParam(folder);
+  //Update view param depending on whether the path is the root directory
+  if (json.pathIsRoot) {
+    clearViewParam();
+  } else {
+    updateViewParam(folder);
+  }
+  updateCurrentView(json.path, json.pathIsRoot);
   receiveDirectoryContent(json);
 }
 
@@ -22,6 +29,7 @@ async function getRootView() {
   const options = { method: "POST" };
   const response = await fetch("/getRootView", options);
   const json = await response.json();
+  updateCurrentView(json.path, json.pathIsRoot);
   receiveDirectoryContent(json);
 }
 

@@ -73,39 +73,51 @@ function filterContent() {
 
 //Format content as HTML elements
 function formatContent(itemObj) {
+  path = itemObj.path;
+  pathIsRoot = itemObj.pathIsRoot;
   folders = itemObj.folders;
   files = itemObj.files;
   var formattedList = [];
   var setTrue = true;
-  //Create a link element for each item
-  folders.forEach((obj) => {
-    infoElement = "<p class='sizeInfo'>" + obj.itemCount + "</p>";
+
+  //Create a contentEntry element for each folder
+  folders.forEach((folderObj) => {
+    infoElement = "<p class='sizeInfo'>" + folderObj.itemCount + "</p>";
     //Wrap each folder entry's elements in a div
     formattedList.push("<div class='contentEntry'>");
     formattedList.push(
-      `<p class='item folder' onclick=changeFolderView('${obj.folderName}',${setTrue})><u>${obj.folderName}</u></p>`
+      `<p class='item folder' onclick=changeFolderView('${folderObj.folderName}',${setTrue})><u>${folderObj.folderName}</u></p>`
     );
     formattedList.push(infoElement);
     formattedList.push("<p class='notApplicable'>n/a</p>");
     formattedList.push("</div>");
   });
-  files.forEach((obj) => {
-    infoElement = `<p class='sizeInfo'>${obj.fileSize}</p>`;
+  //Create a contentEntry element for each folder
+  files.forEach((fileObj) => {
+    infoElement = `<p class='sizeInfo'>${fileObj.fileSize}</p>`;
     //Wrap each folder entry's elements in a div
     formattedList.push("<div class='contentEntry'>");
     formattedList.push(
-      `<a class='item file' href=${obj.fileName}>${obj.fileName}</a>`
+      `<a class='item file' href=${fileObj.fileName}>${fileObj.fileName}</a>`
     );
     formattedList.push(infoElement);
     formattedList.push("<input type='checkbox' class='downloadBox'>");
     formattedList.push("</div>");
   });
+
   //Display 'no results' message when appropriate
   if (formattedList.length == 0) {
-    return "<p><i>No results</i></p>";
-  } else {
-    return formattedList.join("");
+    formattedList.push("<p class='noResults'><i>No results</i></p>");
   }
+
+  //Display link to navigate up one folder when appropriate
+  if (!pathIsRoot) {
+    var returnDirectory = path.substring(0, path.lastIndexOf("/"));
+    formattedList.push(
+      `<p class='oneDirectoryUp' onclick=changeFolderView('${returnDirectory}',${setTrue})><u>Go to ${returnDirectory}</u></p>`
+    );
+  }
+  return formattedList.join("");
 }
 
 function downloadItems(indices = getDownloadIndices()) {

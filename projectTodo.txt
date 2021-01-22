@@ -1,5 +1,6 @@
 Todo:
-- Add option to move back up the filepath toward the root directory
+- Improve app performance
+- Improve code readability
 
 ~~~~~
 
@@ -26,3 +27,4 @@ Todo:
 
 01.22.21
 - Set root directory with a server-side variable
+- Add option to move up the filepath toward the root directory

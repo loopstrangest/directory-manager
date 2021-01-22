@@ -1,5 +1,5 @@
 //Set root directory and default directory-in-focus
-var rootDirectory = "admin";
+var rootDirectory = "directory";
 var activeDirectory = rootDirectory;
 
 //Import packages
@@ -18,6 +18,7 @@ var port = process.env.port || 3000;
 function getItemDetails(content) {
   var folderList = [];
   var fileList = [];
+
   var testObj = {};
   for (var i = 0; i < content.length; i++) {
     var entry = content[i];
@@ -48,8 +49,10 @@ function getItemDetails(content) {
     }
   }
   testObj.path = activeDirectory;
+  testObj.pathIsRoot = activeDirectory == rootDirectory ? true : false;
   testObj.folders = folderList;
   testObj.files = fileList;
+  console.log(testObj);
   return testObj;
 }
 

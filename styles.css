@@ -69,8 +69,14 @@ form {
   width: 50%;
 }
 
-.item {
+.item,
+.oneDirectoryUp {
   cursor: pointer;
+}
+
+.noResults,
+.oneDirectoryUp {
+  text-align: center;
 }
 
 .sizeHeader,

@@ -1,0 +1,4 @@
+time in seconds
+aardvark: 13
+buzzard: 284
+caterpillar: 6983

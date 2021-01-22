@@ -10,6 +10,7 @@
 </head>
 <body>
     <h1>Directory Manager</h1>
+    <h2 id='currentView'></h2>
     <!--Options: search/upload files and change home directory-->
     <div class="options">
         <div class="search">
@@ -47,6 +48,8 @@
     -->
     <!--List of files and folders is generated from /scripts/handleContentList.js-->
     <div id="contentList">
+    </div>
+    <div id="navigateUpFilepath">
     </div>
     <!--Scripts: lower scripts can use functions from upper scripts-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script>
