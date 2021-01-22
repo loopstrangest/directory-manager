@@ -61,17 +61,6 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/Index.html");
 });
 
-//Test function
-/*
-app.post("/dataTest", (req, res, next) => {
-  res.json({
-    status: "success",
-    first: req.body.firstName,
-    last: req.body.lastName,
-  });
-});
-*/
-
 //Post requests
 //When a folder in the directory is list is clicked, show that folder's contents
 app.post("/changeFolderView", (req, res) => {

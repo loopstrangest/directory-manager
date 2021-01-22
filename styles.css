@@ -12,39 +12,36 @@ button,
 #fileUploader {
   padding: 0;
   cursor: pointer;
+  margin: auto;
 }
 
 .options {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  height: 1.5rem;
+  height: auto;
   margin: 1rem 0rem;
 }
 
-.search {
-  width: 25%;
+.search,
+.uploadFiles {
+  width: 50%;
 }
 
-.uploadFiles {
+#searchBar {
   width: 75%;
 }
 
 .options > * {
   display: flex;
-  height: 1.5rem;
-  margin: 0rem 0rem;
+  height: auto;
+  margin: auto;
   justify-content: center;
 }
 
 form {
   display: flex;
   flex-direction: row;
-}
-
-.search > *,
-.uploadFiles > * {
-  line-height: 0rem;
 }
 
 #contentHeader {
@@ -58,15 +55,10 @@ form {
   margin-bottom: 1rem;
 }
 
-.contentEntry > *,
-#contentHeader > * {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-}
-
 .itemHeader,
 .item {
-  width: 50%;
+  width: 60%;
+  padding-right: 0.5rem;
 }
 
 .item,
@@ -84,7 +76,8 @@ form {
 .downloadButtonContainer,
 .notApplicable,
 .downloadBox {
-  width: 25%;
+  width: 20%;
+  margin: auto;
 }
 
 .downloadButtonContainer {
@@ -92,10 +85,10 @@ form {
   flex-direction: column;
 }
 
-.downloadButtonContainer > button {
+button {
   display: inline-block;
   justify-content: center;
-  width: 50%;
+  width: max-content;
   margin: auto;
 }
 
@@ -105,9 +98,28 @@ form {
 }
 
 a,
-p {
+p,
+label {
   margin-top: auto;
   margin-bottom: auto;
   font-size: 24px;
   color: black;
+  word-wrap: break-word;
+}
+
+label {
+  text-align: right;
+  margin-right: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  a,
+  p,
+  label {
+    font-size: 18px;
+  }
+
+  button {
+    width: auto;
+  }
 }
