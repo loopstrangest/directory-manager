@@ -87,6 +87,23 @@ app.post("/getRootView", (req, res) => {
   res.json(jsonObj);
 });
 
+//Delete an item from the directory on button click
+app.delete("/deleteItem", (req, res) => {
+  item = req.body.item;
+  console.log("recieved delete request for " + req.body.item);
+  if (fs.statSync(item).isFile()) {
+    fs.unlinkSync(item);
+  } else if (fs.statSync(item).isDirectory()) {
+    fs.rmdirSync(item, { recursive: true });
+  }
+  var content = fs.readdirSync(activeDirectory);
+  content.forEach((item, index) => {
+    content[index] = activeDirectory + "/" + item;
+  });
+  var jsonObj = getItemDetails(content);
+  res.json(jsonObj);
+});
+
 //Create storage object for file upload
 var storage = multer.diskStorage({
   destination: (req, file, callback) => {

@@ -57,12 +57,13 @@ form {
 
 .itemHeader,
 .item {
-  width: 60%;
+  width: 50%;
   padding-right: 0.5rem;
 }
 
 .item,
-.oneDirectoryUp {
+.oneDirectoryUp,
+.downloadBox {
   cursor: pointer;
 }
 
@@ -75,8 +76,10 @@ form {
 .sizeInfo,
 .downloadButtonContainer,
 .notApplicable,
-.downloadBox {
-  width: 20%;
+.downloadBox,
+.deleteHeader,
+.deleteButtonContainer {
+  width: 15%;
   margin: auto;
 }
 
@@ -85,10 +88,24 @@ form {
   flex-direction: column;
 }
 
-button {
+.downloadButtonContainer > button {
   display: inline-block;
   justify-content: center;
   width: max-content;
+  margin: auto;
+}
+
+.deleteHeader {
+  text-align: center;
+}
+
+.deleteButtonContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.deleteButton {
+  width: auto;
   margin: auto;
 }
 
@@ -119,7 +136,7 @@ label {
     font-size: 18px;
   }
 
-  button {
+  .downloadButtonContainer > button {
     width: auto;
   }
 }

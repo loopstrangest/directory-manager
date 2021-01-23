@@ -1,6 +1,5 @@
 Todo:
-- Improve app performance
-- Improve code readability
+- Contain entire component(?) in a dialog widget
 
 ~~~~~
 
@@ -28,3 +27,7 @@ Todo:
 01.22.21
 - Set root directory with a server-side variable
 - Add option to move up the filepath toward the root directory
+- Improved app performance and code readability
+
+01.23.21
+- Added option to delete files and folders

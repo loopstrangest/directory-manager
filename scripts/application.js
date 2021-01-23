@@ -1,8 +1,7 @@
 //***HANDLE SERVER DATA***
 //Pass data between server and front end when the view changes
 
-//Show appropriate directory based on view parameter
-//Runs on page load
+//On page load, show appropriate directory based on view parameter
 if (getViewFromURL()) {
   changeFolderView(getViewFromURL(), false);
 } else {
@@ -31,7 +30,7 @@ async function changeFolderView(folder, clearDownloads) {
   } else {
     updateViewParam(folder);
   }
-  updateCurrentView(json.path, json.pathIsRoot);
+  updateViewDescription(json.path, json.pathIsRoot);
   receiveDirectoryContent(json);
 }
 
@@ -40,14 +39,32 @@ async function getRootView() {
   const options = { method: "POST" };
   const response = await fetch("/getRootView", options);
   const json = await response.json();
-  updateCurrentView(json.path, json.pathIsRoot);
+  updateViewDescription(json.path, json.pathIsRoot);
+  receiveDirectoryContent(json);
+}
+
+//Delete a selected item from the directory
+async function deleteItem(item) {
+  console.log("to delete: " + item);
+  var data = { item };
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+  const response = await fetch("/deleteItem", options);
+  const json = await response.json();
+  console.log(json);
+  clearDownloadParam();
   receiveDirectoryContent(json);
 }
 
 //***HANDLE DIRECTORY CONTENT***
 //Show and update directory content list for the current view
 
-//Assign names to content list elements
+//Assign variables to content list elements
 var searchBar = document.getElementById("searchBar");
 var contentList = document.getElementById("contentList");
 var fullItemObj = {};
@@ -72,8 +89,6 @@ function getSearchTermFromURL() {
 //Update directory list to reflect the search term
 searchBar.oninput = function () {
   updateList();
-  console.log("getting full item obj");
-  console.log(fullItemObj);
   updateDownloadParam(getDownloadIndices());
 };
 
@@ -91,11 +106,8 @@ function filterContent() {
   var searchParams = new URLSearchParams(document.location.search);
   searchText = searchBar.value;
   //No search parameter in URL when search bar is empty
-  //And no filtering of directory items
   if (searchText == "") {
     searchParams.delete("search");
-    updateURLToReflectUI(searchParams);
-    return functionObj;
   } else {
     //Filter directory items based on the search bar text
     var filteredFolders = functionObj.folders.filter(
@@ -106,11 +118,10 @@ function filterContent() {
     );
     functionObj.folders = filteredFolders;
     functionObj.files = filteredFiles;
-
     searchParams.set("search", searchText);
-    updateURLToReflectUI(searchParams);
-    return functionObj;
   }
+  updateURLToReflectUI(searchParams);
+  return functionObj;
 }
 
 //Format content as HTML elements
@@ -124,7 +135,7 @@ function formatContent(itemObj) {
 
   //Create a contentEntry element for each folder
   folders.forEach((folderObj) => {
-    infoElement = "<p class='sizeInfo'>" + folderObj.itemCount + "</p>";
+    infoElement = `<p class='sizeInfo'>${folderObj.itemCount}</p>`;
     //Wrap each folder entry's elements in a div
     formattedList.push("<div class='contentEntry'>");
     formattedList.push(
@@ -132,6 +143,11 @@ function formatContent(itemObj) {
     );
     formattedList.push(infoElement);
     formattedList.push("<p class='notApplicable'>n/a</p>");
+    formattedList.push("<div class='deleteButtonContainer'>");
+    formattedList.push(
+      `<button class='deleteButton' onclick=deleteItem('${folderObj.folderName}')>Delete Item</button>`
+    );
+    formattedList.push("</div>");
     formattedList.push("</div>");
   });
   //Create a contentEntry element for each folder
@@ -144,6 +160,11 @@ function formatContent(itemObj) {
     );
     formattedList.push(infoElement);
     formattedList.push("<input type='checkbox' class='downloadBox'>");
+    formattedList.push("<div class='deleteButtonContainer'>");
+    formattedList.push(
+      `<button class='deleteButton' onclick=deleteItem('${fileObj.fileName}')>Delete Item</button>`
+    );
+    formattedList.push("</div>");
     formattedList.push("</div>");
   });
 
@@ -165,12 +186,12 @@ function formatContent(itemObj) {
 //***HANDLE DOWNLOADS***
 //Download parameter, download boxes and toggle, download process
 
-//Assign names to download elements
+//Assign variable to download elements
 var downloadButton = document.getElementById("downloadButton");
 
+//'Download Selected' button click: download selected files
 function downloadItems(indices = getDownloadIndices()) {
   var currentFiles = document.getElementsByClassName("file");
-  console.log(currentFiles[0].innerHTML);
   indices.forEach((index) => {
     //Set download element link, filepath, filename
     var link = document.createElement("a");
@@ -190,6 +211,7 @@ function downloadItems(indices = getDownloadIndices()) {
 function getDownloadElements() {
   downloadCheckboxes = document.querySelectorAll(".downloadBox");
   downloadCheckboxes.forEach((item) => {
+    //When a checkbox is clicked, update the download parameter
     item.oninput = function () {
       updateDownloadParam(getDownloadIndices());
     };
@@ -200,7 +222,7 @@ function getDownloadElements() {
 function getDownloadsFromURL() {
   var searchParams = new URLSearchParams(document.location.search);
   var downloads = searchParams.get("download");
-  //Update download checkboxes listed in URL
+  //Check the checkboxes based on the download parameter
   if (downloads) {
     downloads.split(",").forEach((index) => {
       try {
@@ -277,7 +299,7 @@ function getViewFromURL() {
   return folder;
 }
 
-function updateCurrentView(path, pathIsRoot) {
+function updateViewDescription(path, pathIsRoot) {
   var currentView = document.getElementById("currentView");
   var viewText = `Current view: ${path}`;
   if (pathIsRoot) {
