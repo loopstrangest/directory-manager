@@ -324,3 +324,26 @@ function updateURLToReflectUI(searchParams) {
     `${location.pathname}${query}${searchParams}`
   );
 }
+
+//***HANDLE WIDGET***
+var isWidget = false;
+
+$.setWidget = function () {
+  $("#dialog").dialog({
+    dialogClass: "noClose",
+    height: $(window).height() * 0.98,
+    width: $(window).width() * 0.98,
+  });
+};
+
+window.onresize = function () {
+  if (isWidget) {
+    $.setWidget();
+  }
+};
+
+function triggerWidget() {
+  isWidget = true;
+  $.setWidget();
+  document.querySelector("#triggerWidgetButton").remove();
+}

@@ -8,11 +8,28 @@ html {
   margin: 1rem;
 }
 
+h1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+#dialog {
+  font-size: 60%;
+}
+
 button,
 #fileUploader {
   padding: 0;
   cursor: pointer;
   margin: auto;
+}
+
+#triggerWidgetButton {
+  margin: 0;
+}
+
+.noClose .ui-dialog-titlebar-close {
+  display: none;
 }
 
 .options {
