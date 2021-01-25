@@ -1,5 +1,5 @@
 Todo:
-- Contain entire component(?) in a dialog widget
+- 12 run throughs of JS functions with clean code tips
 
 ~~~~~
 
@@ -31,3 +31,8 @@ Todo:
 
 01.23.21
 - Added option to delete files and folders
+- Added one-way option to display app in a dialog widget
+
+01.25.21
+- Combined two fetch functions into one
+- Added functionality to toggle widget view on and off

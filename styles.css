@@ -13,8 +13,12 @@ h1 {
   justify-content: space-between;
 }
 
-#dialog {
+#widget {
   font-size: 60%;
+}
+
+#pageDisplay {
+  border: 1px solid red;
 }
 
 button,
@@ -24,7 +28,7 @@ button,
   margin: auto;
 }
 
-#triggerWidgetButton {
+#toggleWidgetButton {
   margin: 0;
 }
 

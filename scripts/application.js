@@ -3,13 +3,13 @@
 
 //On page load, show appropriate directory based on view parameter
 if (getViewFromURL()) {
-  changeFolderView(getViewFromURL(), false);
+  getList(getViewFromURL(), false);
 } else {
-  getRootView();
+  getList("", false);
 }
 
 //When a folder in the list is clicked or page load with a view parameter, show its contents
-async function changeFolderView(folder, clearDownloads) {
+async function getList(folder, clearDownloads) {
   var data = { folder };
   const options = {
     method: "POST",
@@ -18,7 +18,7 @@ async function changeFolderView(folder, clearDownloads) {
     },
     body: JSON.stringify(data),
   };
-  const response = await fetch("/changeFolderView", options);
+  const response = await fetch("/getList", options);
   const json = await response.json();
   //Clear downloads when specified
   if (clearDownloads) {
@@ -30,15 +30,6 @@ async function changeFolderView(folder, clearDownloads) {
   } else {
     updateViewParam(folder);
   }
-  updateViewDescription(json.path, json.pathIsRoot);
-  receiveDirectoryContent(json);
-}
-
-//When the app is initialized, show the root directory content
-async function getRootView() {
-  const options = { method: "POST" };
-  const response = await fetch("/getRootView", options);
-  const json = await response.json();
   updateViewDescription(json.path, json.pathIsRoot);
   receiveDirectoryContent(json);
 }
@@ -139,7 +130,7 @@ function formatContent(itemObj) {
     //Wrap each folder entry's elements in a div
     formattedList.push("<div class='contentEntry'>");
     formattedList.push(
-      `<p class='item folder' onclick=changeFolderView('${folderObj.folderName}',${setTrue})><u>${folderObj.folderName}</u></p>`
+      `<p class='item folder' onclick=getList('${folderObj.folderName}',${setTrue})><u>${folderObj.folderName}</u></p>`
     );
     formattedList.push(infoElement);
     formattedList.push("<p class='notApplicable'>n/a</p>");
@@ -177,7 +168,7 @@ function formatContent(itemObj) {
   if (!pathIsRoot) {
     var returnDirectory = path.substring(0, path.lastIndexOf("/"));
     formattedList.push(
-      `<p class='oneDirectoryUp' onclick=changeFolderView('${returnDirectory}',${setTrue})><u>Go to ${returnDirectory}</u></p>`
+      `<p class='oneDirectoryUp' onclick=getList('${returnDirectory}',${setTrue})><u>Go to ${returnDirectory}</u></p>`
     );
   }
   return formattedList.join("");
@@ -326,10 +317,28 @@ function updateURLToReflectUI(searchParams) {
 }
 
 //***HANDLE WIDGET***
+//Do not display widget on page load
 var isWidget = false;
 
-$.setWidget = function () {
-  $("#dialog").dialog({
+$.createWidget = function () {
+  var widget = document.createElement("div");
+  widget.id = "widget";
+  widget.title = "Directory Manager Dialog Widget";
+  console.log("setting widget");
+  $("body").prepend(widget);
+  $("#pageContent").prependTo(widget);
+  $.resizeWidget();
+};
+
+$.removeWidget = function () {
+  console.log("removing widget");
+  var widget = document.getElementById("widget").parentElement;
+  $("#pageContent").prependTo($("body"));
+  widget.remove();
+};
+
+$.resizeWidget = function () {
+  $("#widget").dialog({
     dialogClass: "noClose",
     height: $(window).height() * 0.98,
     width: $(window).width() * 0.98,
@@ -338,12 +347,16 @@ $.setWidget = function () {
 
 window.onresize = function () {
   if (isWidget) {
-    $.setWidget();
+    $.resizeWidget();
   }
 };
 
-function triggerWidget() {
-  isWidget = true;
-  $.setWidget();
-  document.querySelector("#triggerWidgetButton").remove();
+function toggleWidget() {
+  isWidget = !isWidget;
+  if (isWidget) {
+    $.createWidget();
+  } else {
+    $.removeWidget();
+  }
+  //document.querySelector("#triggerWidgetButton").remove();
 }

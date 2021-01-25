@@ -63,7 +63,7 @@ app.get("/", function (req, res) {
 
 //Post requests
 //When a folder in the directory is list is clicked, show that folder's contents
-app.post("/changeFolderView", (req, res) => {
+app.post("/getList", (req, res) => {
   if (fs.existsSync(req.body.folder)) {
     activeDirectory = req.body.folder;
   } else {
@@ -72,16 +72,6 @@ app.post("/changeFolderView", (req, res) => {
   var content = fs.readdirSync(activeDirectory);
   content.forEach((item, index) => {
     content[index] = activeDirectory + "/" + item;
-  });
-  var jsonObj = getItemDetails(content);
-  res.json(jsonObj);
-});
-
-//Show the root directory when app initializes and when URL has no 'view' param
-app.post("/getRootView", (req, res) => {
-  var content = fs.readdirSync(rootDirectory);
-  content.forEach((item, index) => {
-    content[index] = rootDirectory + "/" + item;
   });
   var jsonObj = getItemDetails(content);
   res.json(jsonObj);
