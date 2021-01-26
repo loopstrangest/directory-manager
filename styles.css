@@ -29,7 +29,8 @@ button,
 }
 
 #toggleWidgetButton {
-  margin: 0;
+  margin: auto 0;
+  height: min-content;
 }
 
 .noClose .ui-dialog-titlebar-close {

@@ -1,5 +1,6 @@
 Todo:
-- 12 run throughs of JS functions with clean code tips
+- More code cleanup
+- Full runthrough of app testing/grading
 
 ~~~~~
 
@@ -36,3 +37,4 @@ Todo:
 01.25.21
 - Combined two fetch functions into one
 - Added functionality to toggle widget view on and off
+- Cleaned function code and improved readability
