@@ -1,12 +1,17 @@
-//Set root directory and default displayed directory
-var rootDirectory = "directory";
-var activeDirectory = rootDirectory;
-
 //Import packages
 var express = require("express");
 var fs = require("fs");
 var multer = require("multer");
 var bodyParser = require("body-parser");
+
+//Set root directory and default displayed directory
+var rootDirectory = "directory";
+var activeDirectory = rootDirectory;
+
+//Replace bad root directory with a default directory
+if (!fs.existsSync(rootDirectory)) {
+  rootDirectory = "directory";
+}
 
 //Set express, bodyParser, port
 var app = express();
@@ -57,6 +62,13 @@ function getItemDetails(directoryItems) {
   return directoryJsonObj;
 }
 
+function getDirectoryJsonObj(directoryItems) {
+  directoryItems.forEach((item, index) => {
+    directoryItems[index] = activeDirectory + "/" + item;
+  });
+  return getItemDetails(directoryItems);
+}
+
 //Show Index.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/Index.html");
@@ -64,17 +76,11 @@ app.get("/", function (req, res) {
 
 //When a directory is requested, show that directory's contents
 app.post("/getList", (req, res) => {
-  if (fs.existsSync(req.body.directory)) {
-    activeDirectory = req.body.directory;
-  } else {
-    activeDirectory = rootDirectory;
-  }
-  var directoryItems = fs.readdirSync(activeDirectory);
-  directoryItems.forEach((item, index) => {
-    directoryItems[index] = activeDirectory + "/" + item;
-  });
-  var directoryJsonObj = getItemDetails(directoryItems);
-  res.json(directoryJsonObj);
+  //Set the requested directory
+  activeDirectory = fs.existsSync(req.body.directory)
+    ? req.body.directory
+    : rootDirectory;
+  res.json(getDirectoryJsonObj(fs.readdirSync(activeDirectory)));
 });
 
 //Delete an item from the directory
@@ -85,12 +91,7 @@ app.delete("/deleteItem", (req, res) => {
   } else if (fs.statSync(item).isDirectory()) {
     fs.rmdirSync(item, { recursive: true });
   }
-  var directoryItems = fs.readdirSync(activeDirectory);
-  directoryItems.forEach((item, index) => {
-    directoryItems[index] = activeDirectory + "/" + item;
-  });
-  var directoryJsonObj = getItemDetails(directoryItems);
-  res.json(directoryJsonObj);
+  res.json(getDirectoryJsonObj(fs.readdirSync(activeDirectory)));
 });
 
 //Create storage object for file upload
@@ -99,8 +100,9 @@ var storage = multer.diskStorage({
     callback(null, activeDirectory);
   },
   filename: (req, file, callback) => {
-    const { originalname } = file;
-    callback(null, originalname);
+    //Replace filename characters that prevent file deletion
+    var uploadName = file.originalname.replace(/[- |&;$%@"<>()+,]/g, "_");
+    callback(null, uploadName);
   },
 });
 var upload = multer({ storage });

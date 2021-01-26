@@ -2,11 +2,7 @@
 //Pass data between server and front end when the view changes
 
 //On page load, show appropriate directory based on view parameter
-if (getViewFromURL()) {
-  getList(getViewFromURL(), false);
-} else {
-  getList("", false);
-}
+getList(getViewFromURL(), false);
 
 //When a directory is requested, get its information
 async function getList(directory, deleteDownloads) {
@@ -24,13 +20,9 @@ async function getList(directory, deleteDownloads) {
   if (deleteDownloads) {
     deleteDownloadParam();
   }
-  //Update view parameter depending on whether the path is the root directory
-  if (directoryJsonObj.pathIsRoot) {
-    deleteViewParam();
-  } else {
-    updateViewParam(directory);
-  }
-  updateViewDescription(directoryJsonObj.path, directoryJsonObj.pathIsRoot);
+  console.log(directoryJsonObj);
+  //Update view parameter and display based on the directory
+  handleViewParam(directoryJsonObj.path, directoryJsonObj.pathIsRoot);
   receiveDirectoryContent(directoryJsonObj);
 }
 
@@ -60,13 +52,13 @@ var fullDirectoryObj = {};
 
 function receiveDirectoryContent(directoryObj) {
   fullDirectoryObj = JSON.parse(JSON.stringify(directoryObj));
-  getSearchTermFromURL();
+  updateSearchTermFromURL();
   updateDirectoryContentList();
   updateDownloadCheckboxesFromURL();
 }
 
 //Get search parameter from URL and update UI
-function getSearchTermFromURL() {
+function updateSearchTermFromURL() {
   var URLParams = new URLSearchParams(document.location.search);
   var searchTerm = URLParams.get("search");
   //Update search bar if URL contains a search parameter
@@ -78,22 +70,23 @@ function getSearchTermFromURL() {
 //Display content list
 function updateDirectoryContentList() {
   contentList.innerHTML = formatDirectoryContent(filterDirectoryContent());
-  //After download checkboxes are created, access them
-  handleDownloadCheckboxes();
+
+  //After download checkboxes are created, have them update the download URL param when clicked
+  tieDownloadCheckboxesToURLParam();
 }
 
 //Filter content list based on search criteria
 function filterDirectoryContent() {
-  filteredDirectoryObj = JSON.parse(JSON.stringify(fullDirectoryObj));
+  var filteredDirectoryObj = JSON.parse(JSON.stringify(fullDirectoryObj));
   var URLParams = new URLSearchParams(document.location.search);
-  searchText = searchBar.value;
+  var searchText = searchBar.value;
   if (searchText) {
     //Filter directory items based on the search bar text
     var filteredFolders = filteredDirectoryObj.folders.filter(
-      (obj) => obj.folderName.search(searchText) != -1
+      (directoryObj) => directoryObj.folderName.search(searchText) != -1
     );
     var filteredFiles = filteredDirectoryObj.files.filter(
-      (obj) => obj.fileName.search(searchText) != -1
+      (directoryObj) => directoryObj.fileName.search(searchText) != -1
     );
     filteredDirectoryObj.folders = filteredFolders;
     filteredDirectoryObj.files = filteredFiles;
@@ -104,11 +97,11 @@ function filterDirectoryContent() {
 }
 
 //Format content as HTML elements
-function formatDirectoryContent(itemObj) {
-  path = itemObj.path;
-  pathIsRoot = itemObj.pathIsRoot;
-  folders = itemObj.folders;
-  files = itemObj.files;
+function formatDirectoryContent(directoryObj) {
+  path = directoryObj.path;
+  pathIsRoot = directoryObj.pathIsRoot;
+  folders = directoryObj.folders;
+  files = directoryObj.files;
   var formattedContentEntries = [];
   var setTrue = true;
   //Create a contentEntry element for each folder
@@ -131,7 +124,6 @@ function formatDirectoryContent(itemObj) {
   });
   //Create a contentEntry element for each file
   files.forEach((fileObj) => {
-    //Wrap each file entry's elements in a div
     formattedContentEntries.push(
       //Wrap each file entry's elements in a div
       "<div class='contentEntry'>",
@@ -143,7 +135,6 @@ function formatDirectoryContent(itemObj) {
       "<input type='checkbox' class='downloadBox'>",
       //Delete column
       "<div class='deleteButtonContainer'>",
-
       `<button class='deleteButton' onclick=deleteItem('${fileObj.fileName}')>Delete Item</button>`,
       "</div>",
       "</div>"
@@ -173,12 +164,12 @@ var downloadButton = document.getElementById("downloadButton");
 function downloadItems(fileIndices = getCheckedDownloadIndicesFromUI()) {
   var displayedFiles = document.getElementsByClassName("file");
   fileIndices.forEach((fileIndex) => {
-    //Create link download element
+    //Create a link download element for each displayed file
     var link = document.createElement("a");
     var filepath = displayedFiles[fileIndex].innerHTML;
     link.download = filepath.split("/").pop();
     link.href = filepath;
-    //Hide link, 'click' it to download the file, remove link
+    //'Click' the link to download the file and remove the link
     link.style.display = "none";
     document.body.appendChild(link);
     link.click();
@@ -187,7 +178,7 @@ function downloadItems(fileIndices = getCheckedDownloadIndicesFromUI()) {
 }
 
 //Access download checkboxes and assign input functionality
-function handleDownloadCheckboxes() {
+function tieDownloadCheckboxesToURLParam() {
   downloadCheckboxes = document.querySelectorAll(".downloadBox");
   downloadCheckboxes.forEach((checkbox) => {
     //When a checkbox is clicked, update the download parameter
@@ -233,7 +224,7 @@ function deleteDownloadParam() {
 function toggleDownloadCheckboxes() {
   var checkedState = false;
   for (var i = 0; i < downloadCheckboxes.length; i++) {
-    //If any checkbox is not checked, check all
+    //If any checkbox is not checked, check all, otherwise uncheck all
     if (downloadCheckboxes[i].checked == false) {
       checkedState = true;
     }
@@ -274,12 +265,7 @@ function updateSearchParam(URLParams, searchText) {
 
 //***HANDLE VIEW***
 //View parameter and view changes
-
-function updateViewParam(directory) {
-  var URLParams = new URLSearchParams(document.location.search);
-  URLParams.set("view", directory);
-  updateURLToReflectUI(URLParams);
-}
+var currentView = document.getElementById("currentView");
 
 function getViewFromURL() {
   var URLParams = new URLSearchParams(document.location.search);
@@ -287,19 +273,19 @@ function getViewFromURL() {
   return directory;
 }
 
-function updateViewDescription(path, pathIsRoot) {
-  var currentView = document.getElementById("currentView");
+function handleViewParam(path, pathIsRoot) {
   var viewText = `Current view: ${path}`;
-  if (pathIsRoot) {
-    viewText += " (root)";
-  }
-  currentView.innerHTML = viewText;
-}
-
-function deleteViewParam() {
   var URLParams = new URLSearchParams(document.location.search);
-  URLParams.delete("view");
+  //Update view param based on current directory
+  if (pathIsRoot) {
+    URLParams.delete("view");
+    viewText += " (root)";
+  } else {
+    URLParams.set("view", path);
+  }
   updateURLToReflectUI(URLParams);
+  //Display the current view
+  currentView.innerHTML = viewText;
 }
 
 //***HANDLE URL***
@@ -315,7 +301,32 @@ function updateURLToReflectUI(URLParams) {
 
 //***HANDLE WIDGET (jQueryUI)***
 //Widget is not displayed by default
-var isWidget = false;
+var isWidget = new URLSearchParams(document.location.search).get("widget")
+  ? true
+  : false;
+
+window.onload = () => {
+  if (isWidget) {
+    $.createWidget();
+  }
+};
+
+//Update widget param based on current UI state
+function updateWidgetParam() {
+  var URLParams = new URLSearchParams(document.location.search);
+  if (isWidget) {
+    URLParams.set("widget", "on");
+  } else {
+    URLParams.delete("widget");
+  }
+  updateURLToReflectUI(URLParams);
+}
+
+window.onresize = function () {
+  if (isWidget) {
+    $.resizeWidget();
+  }
+};
 
 //Create widget element and prepend page content
 $.createWidget = function () {
@@ -325,6 +336,7 @@ $.createWidget = function () {
   $("body").prepend(widget);
   $("#pageContent").prependTo(widget);
   $.resizeWidget();
+  updateWidgetParam();
 };
 
 //Move page content from widget to body and remove widget
@@ -332,6 +344,7 @@ $.removeWidget = function () {
   var widget = document.getElementById("widget").parentElement;
   $("#pageContent").prependTo($("body"));
   widget.remove();
+  updateWidgetParam();
 };
 
 //Resize widget to fit current window size
@@ -341,12 +354,6 @@ $.resizeWidget = function () {
     height: $(window).height() * 0.98,
     width: $(window).width() * 0.98,
   });
-};
-
-window.onresize = function () {
-  if (isWidget) {
-    $.resizeWidget();
-  }
 };
 
 //Switch between default and widget displays on button click

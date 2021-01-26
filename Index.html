@@ -6,54 +6,54 @@
   name="description"           
   content="Single page web app to browse folders and files in
   a root directory and upload and download files.">
-    <link rel="stylesheet" href="/styles.css"/>
     <link rel="icon" type="image/png" sizes="32x32"
     href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16"
     href="/favicon-16x16.png">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/styles.css"/>
     <title>Directory Manager</title>
 </head>
 <body>
-<div id="pageContent">
-    <h1>
-        Directory Manager
-        <button id='toggleWidgetButton' onclick='toggleWidget()' >Toggle Widget</button>
-    </h1>
-    <h2 id='currentView'></h2>
-    <!--Options: search directory contents and upload files-->
-    <div class="options">
-        <div class="search">
-            <label for="searchBar">Search:</label>
-            <input type="text" id="searchBar">
+    <div id="pageContent">
+        <h1>
+            Directory Manager
+            <button id='toggleWidgetButton' onclick='toggleWidget()' >Toggle Widget</button>
+        </h1>
+        <h2 id='currentView'></h2>
+        <!--Options: search directory contents and upload files-->
+        <div class="options">
+            <div class="search">
+                <label for="searchBar">Search:</label>
+                <input type="text" id="searchBar">
+            </div>
+            <div class="uploadFiles">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <label for="fileUploader">Upload Files:</label>
+                    <input type="file" name="selectedFiles" id="fileUploader" style='display:none;' onchange = this.form.submit() multiple>
+                    <input type="button" value="Browse..." onclick="document.getElementById('fileUploader').click();" />
+                </form>
+            </div> 
         </div>
-        <div class="uploadFiles">
-            <form action="/upload" method="POST" enctype="multipart/form-data">
-                <label for="fileUploader">Upload Files:</label>
-                <input type="file" name="selectedFiles" id="fileUploader" style='display:none;' onchange = this.form.submit() multiple>
-                <input type="button" value="Browse..." onclick="document.getElementById('fileUploader').click();" />
-            </form>
-        </div> 
-    </div>
-    <!--File/folder column headers and download buttons-->
-    <div id="contentHeader">
-        <p class="itemHeader"><strong>Item</strong></p>
-        <p class="sizeHeader"><strong>Size</strong></p>
-        <div class = "downloadButtonContainer">
-            <button id="toggleDownloadsButton"
-            onclick="toggleDownloadCheckboxes()">Toggle All Downloads</button>
-            <button id="downloadButton"
-            onclick="downloadItems()">Download Selected</button>
+        <!--File/folder column headers and download buttons-->
+        <div id="contentHeader">
+            <p class="itemHeader"><strong>Item</strong></p>
+            <p class="sizeHeader"><strong>Size</strong></p>
+            <div class = "downloadButtonContainer">
+                <button id="toggleDownloadsButton"
+                onclick="toggleDownloadCheckboxes()">Toggle All Downloads</button>
+                <button id="downloadButton"
+                onclick="downloadItems()">Download Selected</button>
+            </div>
+            <p class="deleteHeader"><strong>Delete</strong></p>
         </div>
-        <p class="deleteHeader"><strong>Delete</strong></p>
+        <!--contentList contents are generated from application.js-->
+        <div id="contentList">
+        </div>
+        <!--navigation link is conditionally generated from application.js-->
+        <div id="navigateUpFilepath">
+        </div>
     </div>
-    <!--contentList contents are generated from application.js-->
-    <div id="contentList">
-    </div>
-    <!--navigation link is conditionally generated from application.js-->
-    <div id="navigateUpFilepath">
-    </div>
-</div>
     <!--Scripts-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

@@ -18,6 +18,6 @@ To run the app. Open [http://localhost:3000](http://localhost:3000) to view it i
 
 This single page application allows the user to search and browse files and folders in a specified directory, as well as upload and download files from the browser.
 
-'Search', 'download', and 'view' parameters automatically update in the URL to reflect the current state of the UI. Likewise, the user can navigate to a URL that includes any of the parameters and the UI will reflect that information.
+'Search', 'download', 'view', and 'widget' parameters automatically update in the URL to reflect the current state of the UI. Likewise, the user can navigate to a URL that includes any of the parameters and the UI will reflect that information.
 
 The server-side 'rootDirectory' variable can be modified to change the app's root directory. Examples: 'admin', 'directory/reviews', 'directory/articles/featuredArticles'

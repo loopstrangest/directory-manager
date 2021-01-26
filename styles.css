@@ -31,6 +31,7 @@ button,
 #toggleWidgetButton {
   margin: auto 0;
   height: min-content;
+  font-size: 0.5em;
 }
 
 .noClose .ui-dialog-titlebar-close {
@@ -68,6 +69,7 @@ form {
 
 #contentHeader {
   border-bottom: 1px solid black;
+  padding-bottom: 0.5rem;
 }
 
 .contentEntry,
