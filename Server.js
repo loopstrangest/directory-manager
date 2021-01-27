@@ -62,7 +62,7 @@ function getItemDetails(directoryItems) {
   return directoryJsonObj;
 }
 
-function getDirectoryJsonObj(directoryItems) {
+function formatDirectoryItems(directoryItems) {
   directoryItems.forEach((item, index) => {
     directoryItems[index] = activeDirectory + "/" + item;
   });
@@ -80,7 +80,7 @@ app.post("/getList", (req, res) => {
   activeDirectory = fs.existsSync(req.body.directory)
     ? req.body.directory
     : rootDirectory;
-  res.json(getDirectoryJsonObj(fs.readdirSync(activeDirectory)));
+  res.json(formatDirectoryItems(fs.readdirSync(activeDirectory)));
 });
 
 //Delete an item from the directory
@@ -91,7 +91,7 @@ app.delete("/deleteItem", (req, res) => {
   } else if (fs.statSync(item).isDirectory()) {
     fs.rmdirSync(item, { recursive: true });
   }
-  res.json(getDirectoryJsonObj(fs.readdirSync(activeDirectory)));
+  res.json(formatDirectoryItems(fs.readdirSync(activeDirectory)));
 });
 
 //Create storage object for file upload
