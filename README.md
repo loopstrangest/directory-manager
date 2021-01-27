@@ -16,7 +16,7 @@ To run the app. Open [http://localhost:3000](http://localhost:3000) to view the 
 
 ## Project Description
 
-This single page application allows the user to search and browse files and folders in any directory within a root directory, upload and download files from the browser, and delete files.
+This single page application allows the user to search and browse files and folders in any directory within a root directory, upload and download files from the browser, and delete files and folders.
 
 'Search', 'download', 'view', and 'widget' parameters automatically update in the URL to reflect the current state of the UI. Likewise, the user can navigate to a URL that includes any of the parameters and the UI will reflect that information.
 
