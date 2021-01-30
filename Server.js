@@ -75,7 +75,7 @@ app.get("/", function (req, res) {
 });
 
 //When a directory is requested, show that directory's contents
-app.post("/getList", (req, res) => {
+app.post("/get_list", (req, res) => {
   //Set the requested directory
   activeDirectory = fs.existsSync(req.body.directory)
     ? req.body.directory
@@ -84,7 +84,7 @@ app.post("/getList", (req, res) => {
 });
 
 //Delete an item from the directory
-app.delete("/deleteItem", (req, res) => {
+app.delete("/delete_item", (req, res) => {
   item = req.body.item;
   if (fs.statSync(item).isFile()) {
     fs.unlinkSync(item);

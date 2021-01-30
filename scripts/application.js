@@ -14,13 +14,12 @@ async function getList(directory, deleteDownloads) {
     },
     body: JSON.stringify(data),
   };
-  const response = await fetch("/getList", options);
+  const response = await fetch("/get_list", options);
   const directoryJsonObj = await response.json();
   //Delete download param when specified
   if (deleteDownloads) {
     deleteDownloadParam();
   }
-  console.log(directoryJsonObj);
   //Update view parameter and display based on the directory
   handleViewParam(directoryJsonObj.path, directoryJsonObj.pathIsRoot);
   receiveDirectoryContent(directoryJsonObj);
@@ -36,7 +35,7 @@ async function deleteItem(item) {
     },
     body: JSON.stringify(data),
   };
-  const response = await fetch("/deleteItem", options);
+  const response = await fetch("/delete_item", options);
   const directoryJsonObj = await response.json();
   deleteDownloadParam();
   receiveDirectoryContent(directoryJsonObj);
@@ -110,7 +109,7 @@ function formatDirectoryContent(directoryObj) {
       //Wrap each folder item's elements in a div
       "<div class='contentEntry'>",
       //Item column: clickable folder name
-      `<p class='item folder' onclick=getList('${folderObj.folderName}',${setTrue})><u>${folderObj.folderName}</u></p>`,
+      `<p class='item folder' onclick=getList('${folderObj.folderName}',${setTrue})>📁<u>${folderObj.folderName}</u></p>`,
       //Size column: folder item count
       `<p class='sizeInfo'>${folderObj.itemCount}</p>`,
       //Download column: not applicable
@@ -128,7 +127,7 @@ function formatDirectoryContent(directoryObj) {
       //Wrap each file entry's elements in a div
       "<div class='contentEntry'>",
       //Item column: clickable file name
-      `<a class='item file' href=${fileObj.fileName}>${fileObj.fileName}</a>`,
+      `<a class='item file' style='text-decoration:none;' href=${fileObj.fileName} target='_blank' rel='noopener noreferrer'>✨<u>${fileObj.fileName}</u></a>`,
       //Size column: file size item count
       `<p class='sizeInfo'>${fileObj.fileSize}</p>`,
       //Download column: download checkbox
@@ -166,7 +165,7 @@ function downloadItems(fileIndices = getCheckedDownloadIndicesFromUI()) {
   fileIndices.forEach((fileIndex) => {
     //Create a link download element for each displayed file
     var link = document.createElement("a");
-    var filepath = displayedFiles[fileIndex].innerHTML;
+    var filepath = displayedFiles[fileIndex].getAttribute("href");
     link.download = filepath.split("/").pop();
     link.href = filepath;
     //'Click' the link to download the file and remove the link
